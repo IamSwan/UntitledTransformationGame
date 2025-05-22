@@ -15,5 +15,6 @@ game.ReplicatedStorage.Remotes.MCREMOTE.OnServerEvent:Connect(function(plr)
 		core.CoreNeon.Color = Color3.fromRGB(147, 218, 46)
 		proto.MovingButton.Color = Color3.fromRGB(147, 218, 46)
 		game.ReplicatedStorage.Remotes.VFXRemote:FireAllClients("PrototypeOmnitrixBlinkMaster", plr.Character.HumanoidRootPart)
+		plr.Character:SetAttribute("Battery", 100)
 	end
 end)

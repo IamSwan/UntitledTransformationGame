@@ -17,10 +17,23 @@ return function(player: Player)
 	if not player.Character:GetAttribute("Priming") then
 		player.Character:SetAttribute("Priming", true)
 		vfxRemote:FireAllClients( "PrototypeOmnitrixLightCore", player.Character.HumanoidRootPart)
+		local primeSound: Sound = core.Core["Prime1"]
+		if primeSound then
+			primeSound:Play()
+		end
+		primeSound.Ended:Wait()
+		local primedLoop = core.Core["PrimedLoop"]
+		if primedLoop then
+			primedLoop:Play()
+		end
 		task.delay(cooldownModule.SharedCooldowns.Prime, function()
 			cooldownModule:Stop(player, "Busy")
 		end)
 		return
+	end
+	local primedLoop: Sound = core.Core["PrimedLoop"]
+	if primedLoop then
+		primedLoop:Stop()
 	end
 	vfxRemote:FireAllClients("PrototypeOmnitrixDisableCore", player.Character.HumanoidRootPart)
 	player.Character:SetAttribute("Priming", nil)

@@ -28,8 +28,13 @@ function prototypeOmnitrix:transform(player: Player, alien: string)
 	end
 
 	local transformSound: Sound = player.Character:FindFirstChild("PrototypeOmnitrix")["Moving core"].Core.Transform
+	local primedLoop: Sound = player.Character:FindFirstChild("PrototypeOmnitrix")["Moving core"].Core.PrimedLoop
 
-	if not transformSound.Playing then
+	if primedLoop then
+		primedLoop:Stop()
+	end
+
+	if transformSound then
 		transformSound:Stop()
 	end
 	transformSound:Play()
@@ -74,7 +79,13 @@ end
 
 function prototypeOmnitrix:timeout(player: Player)
 	local alienModel = player.Character:FindFirstChild("Alien")
+	local timeout: Sound = player.Character:FindFirstChild("PrototypeOmnitrix")["Moving core"].Core.Timeout
+
+	if not timeout.Playing then
+		timeout:Stop()
+	end
 	if alienModel then
+		timeout:Play()
 		local badge = alienModel:FindFirstChild("Badge")
 		if badge then
 			for i = 1, 4, 1 do
@@ -107,6 +118,9 @@ function prototypeOmnitrix:detransform(player: Player)
 		return
 	end
 
+	local detransformSound: Sound = player.Character:FindFirstChild("PrototypeOmnitrix")["Moving core"].Core.Detransform
+	local transformSound: Sound = player.Character:FindFirstChild("PrototypeOmnitrix")["Moving core"].Core.Transform
+
 	local badge = alienModel:FindFirstChild("Badge"):FindFirstChild("Core")
 	if not player:GetAttribute("Master") then
 		badge.Color = Color3.fromRGB(255, 0, 0)
@@ -116,7 +130,13 @@ function prototypeOmnitrix:detransform(player: Player)
 		core.CoreLines.Color = Color3.fromRGB(255, 0, 0)
 		core.CoreNeon.Color = Color3.fromRGB(255, 0, 0)
 		proto.MovingButton.Color = Color3.fromRGB(255, 0, 0)
+		if detransformSound then
+			detransformSound:Play()
+		end
 	else
+		if transformSound then
+			transformSound:Play()
+		end
 		badge.Color = Color3.fromRGB(147, 218, 46)
 	end
 	badge.Material = Enum.Material.Neon

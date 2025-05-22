@@ -24,5 +24,6 @@ inputBinder:UnbindAllActions()
 
 inputBinder:BindAction("Prime", { Enum.KeyCode.R })
 inputBinder:BindAction("Transform", { Enum.KeyCode.T })
+inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftControl })
 
 animationModule:refresh()

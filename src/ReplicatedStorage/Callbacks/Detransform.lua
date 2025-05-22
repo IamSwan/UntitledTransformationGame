@@ -30,6 +30,9 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	if player.Character:GetAttribute("Transformed") then
 		print("Detransforming")
 
+		inputBinder:BindAction("Prime", { Enum.KeyCode.R })
+		inputBinder:BindAction("Transform", { Enum.KeyCode.T })
+		inputBinder:UnbindAction("QuickChange")
 		if not player:GetAttribute("Master") and inputObject ~= nil then
 			local alienAnimName = player:GetAttribute("Ability")
 				.. player.Character:GetAttribute("Alien")
@@ -44,9 +47,6 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 		end
 
 		replicatedStorage.Remotes.ActionRemote:FireServer(action)
-		inputBinder:BindAction("Prime", { Enum.KeyCode.R })
-		inputBinder:BindAction("Transform", { Enum.KeyCode.T })
-		inputBinder:UnbindAction("QuickChange")
 	end
 
 	return Enum.ContextActionResult.Sink

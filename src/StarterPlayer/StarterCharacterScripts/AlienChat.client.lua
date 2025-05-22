@@ -1,3 +1,4 @@
+local Players = game:GetService("Players")
 local chatService = game:GetService("TextChatService")
 local alienChatRemote = game.ReplicatedStorage.Remotes.AlienChatRemote
 
@@ -8,7 +9,7 @@ chatService.OnIncomingMessage = function(message: TextChatMessage)
 	if message.Status ~= Enum.TextChatMessageStatus.Sending then
 		return
 	end
-	if not game.Players.LocalPlayer:GetAttribute("Master") then
+	if not game.Players.LocalPlayer:GetAttribute("Master") or game.Players.LocalPlayer.Character:GetAttribute("Priming") then
 		return
 	end
 

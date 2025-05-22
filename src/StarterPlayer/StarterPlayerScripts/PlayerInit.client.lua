@@ -25,6 +25,7 @@ animationModule:addAnimation("PrototypeOmnitrixDialLeft", "rbxassetid://12135048
 animationModule:addAnimation("PrototypeOmnitrixDialRight", "rbxassetid://130279441291065", false)
 animationModule:addAnimation("PrototypeOmnitrixKineceleranBadgeSlam", "rbxassetid://92711182354921", false)
 animationModule:addAnimation("PrototypeOmnitrixPetrosapienBadgeSlam", "rbxassetid://77952464903736", false)
+animationModule:addAnimation("PrototypeOmnitrixEctonuriteBadgeSlam", "rbxassetid://81787939428214", false)
 
 --|| Functions ||--
 local function onPlaylistReceived(playlist: {})

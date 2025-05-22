@@ -15,8 +15,8 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 		print("busy.")
 		return
 	end
-	cooldownModule:Start(player, "Busy", cooldownModule.SharedCooldowns.Prime)
-	cooldownModule:Stop(player, "Prime", cooldownModule.Cooldowns.Prime)
+	cooldownModule:Start(player, "Busy", 99)
+	cooldownModule:Start(player, "Prime", cooldownModule.Cooldowns.Prime)
 
 	if player.Character:GetAttribute("Priming") then
 		print("Unpriming")
@@ -29,9 +29,9 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	else
 		print("Priming")
 		animationModule:Play("PrototypeOmnitrixPrime", 0.2)
+		game.ReplicatedStorage.Remotes.ActionRemote:FireServer(action)
 		animationModule:getTrack("PrototypeOmnitrixPrime"):GetMarkerReachedSignal("Trigger"):Wait()
 		animationModule:Play("PrototypeOmnitrixPrimeIdle")
-		game.ReplicatedStorage.Remotes.ActionRemote:FireServer(action)
 		inputBinder:BindAction("DialRight", { Enum.KeyCode.E })
 		inputBinder:BindAction("DialLeft", { Enum.KeyCode.Q })
 	end

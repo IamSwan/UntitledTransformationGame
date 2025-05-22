@@ -19,7 +19,7 @@ return table.freeze({
 		["MaxHealth"] = 80,
 		["AttackMult"] = 1.2,
 		["WalkSpeed"] = 30,
-		["RunSpeed"] = 30 * 2,
+		["RunSpeed"] = 30 * 4,
 		["JumpHeight"] = 7.2,
 	},
 	["Petrosapien"] = {
@@ -41,6 +41,6 @@ return table.freeze({
 		["AttackMult"] = 20,
 		["WalkSpeed"] = 80,
 		["RunSpeed"] = 80 * 2,
-		["JumpHeight"] = 20,
+		["JumpHeight"] = 30,
 	},
 })

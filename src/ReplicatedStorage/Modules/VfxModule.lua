@@ -2,6 +2,8 @@ local vfx = {}
 
 local transformConfig = require(game.ReplicatedStorage.Configs.TransformConfig)
 
+local tweenService = game:GetService("TweenService")
+
 vfx.PrototypeOmnitrixTransform = function(origin: CFrame | Part)
 	local vfx = game.ReplicatedStorage.Assets.VFX:FindFirstChild("PrototypeTransformationEffect"):Clone()
 	vfx.Parent = origin
@@ -10,40 +12,29 @@ vfx.PrototypeOmnitrixTransform = function(origin: CFrame | Part)
 	weld.Part0 = origin
 	weld.Part1 = vfx
 
-	local highlight = Instance.new("Highlight")
-	highlight.Parent = origin.Parent
-	highlight.OutlineColor = Color3.fromRGB(147, 218, 46)
-	highlight.FillColor = Color3.fromRGB(147, 218, 46)
-	highlight.FillTransparency = 0
-	highlight.DepthMode = Enum.HighlightDepthMode.Occluded
+	local ti = TweenInfo.new(2)
+	local tween = tweenService:Create(vfx.Attachment.PointLight, ti, {Brightness = 0})
 
 	for _, child in vfx:GetDescendants() do
 		if child:IsA("ParticleEmitter") then
+
 			child:Emit(20)
 			task.delay(transformConfig.TransformDuration, function()
-				game:GetService("Debris"):AddItem(highlight, 0.1)
 				game:GetService("Debris"):AddItem(vfx.Attachment.PointLight, 0.35)
 				game:GetService("Debris"):AddItem(vfx, 2)
 			end)
 		end
 	end
+	tween:Play()
 end
 
 vfx.PrototypeOmnitrixDetransform = function(origin: CFrame | Part)
 	local vfx = nil
-	local highlight = Instance.new("Highlight")
-	highlight.Parent = origin.Parent
-	highlight.FillTransparency = 0
-	highlight.DepthMode = Enum.HighlightDepthMode.Occluded
 
 	if not game.Players.LocalPlayer:GetAttribute("Master") then
 		vfx = game.ReplicatedStorage.Assets.VFX:FindFirstChild("PrototypeDetransformationEffect"):Clone()
-		highlight.OutlineColor = Color3.fromRGB(255, 0, 0)
-		highlight.FillColor = Color3.fromRGB(255, 0, 0)
 	else
 		vfx = game.ReplicatedStorage.Assets.VFX:FindFirstChild("PrototypeTransformationEffect"):Clone()
-		highlight.OutlineColor = Color3.fromRGB(147, 218, 46)
-		highlight.FillColor = Color3.fromRGB(147, 218, 46)
 	end
 
 	vfx.Parent = origin
@@ -52,16 +43,19 @@ vfx.PrototypeOmnitrixDetransform = function(origin: CFrame | Part)
 	weld.Part0 = origin
 	weld.Part1 = vfx
 
+	local ti = TweenInfo.new(2)
+	local tween = tweenService:Create(vfx.Attachment.PointLight, ti, {Brightness = 0})
+
 	for _, child in vfx:GetDescendants() do
 		if child:IsA("ParticleEmitter") then
 			child:Emit(20)
 			task.delay(transformConfig.TransformDuration, function()
-				game:GetService("Debris"):AddItem(highlight, 0.1)
 				game:GetService("Debris"):AddItem(vfx.Attachment.PointLight, 0.35)
 				game:GetService("Debris"):AddItem(vfx, 2)
 			end)
 		end
 	end
+	tween:Play()
 end
 
 vfx.PrototypeOmnitrixLightCore = function(origin: CFrame | Part)
