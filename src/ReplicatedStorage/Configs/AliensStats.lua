@@ -6,6 +6,14 @@ local template = {
 	["JumpHeight"] = 7.2,
 }
 
+export type Template = {
+	MaxHealth : number,
+	AttackMult : number,
+	WalkSpeed : number,
+	RunSpeed : number,
+	JumpHeight : number,
+}
+
 return table.freeze({
 	["Human"] = template,
 	["Pyronite"] = {

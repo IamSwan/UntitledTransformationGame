@@ -2,12 +2,16 @@
 local playerService = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 local serverStorage = game:GetService("ServerStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+
 local alienPlaylistManager = require(replicatedStorage.Modules.AlienPlaylistManager)
 
 local transformModule = require(replicatedStorage.Modules.TransformModule)
 local batteryModule = require(replicatedStorage.Modules.OmnitrixBatteryModule)
 
 local batteryConfig = require(replicatedStorage.Configs.BatteryConfig)
+
+local CombatClass = require(ServerScriptService.Modules.CombatClass)
 
 --|| Functions ||--
 local function onPlayerDied(player: Player)
@@ -24,6 +28,10 @@ local function onPlayerAdded(player: Player)
 
 	player.CharacterAdded:Connect(function(character: Model)
 		local humanoid: Humanoid = character:FindFirstChild("Humanoid")
+
+		local Class = CombatClass.new(character)
+
+
 		transformModule:setBodyScale(character, "Human")
 		humanoid.BreakJointsOnDeath = false
 		if player:GetAttribute("Ability") == "PrototypeOmnitrix" then
