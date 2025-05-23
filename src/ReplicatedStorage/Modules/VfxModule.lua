@@ -30,8 +30,9 @@ end
 
 vfx.PrototypeOmnitrixDetransform = function(origin: CFrame | Part)
 	local vfx = nil
+	local player = game.Players:GetPlayerFromCharacter(origin.Parent)
 
-	if not game.Players.LocalPlayer:GetAttribute("Master") then
+	if not player:GetAttribute("Master") then
 		vfx = game.ReplicatedStorage.Assets.VFX:FindFirstChild("PrototypeDetransformationEffect"):Clone()
 	else
 		vfx = game.ReplicatedStorage.Assets.VFX:FindFirstChild("PrototypeTransformationEffect"):Clone()

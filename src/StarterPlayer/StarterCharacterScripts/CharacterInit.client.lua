@@ -1,11 +1,9 @@
 --|| Services ||--
-local userInputService = game:GetService("UserInputService")
 local playersService = game:GetService("Players")
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 --|| References ||--
 local modules = replicatedStorage.Modules
-local remotes = replicatedStorage.Remotes
 
 --|| Modules ||--
 local vfxModule = require(modules.VfxModule)
@@ -24,6 +22,8 @@ inputBinder:UnbindAllActions()
 
 inputBinder:BindAction("Prime", { Enum.KeyCode.R })
 inputBinder:BindAction("Transform", { Enum.KeyCode.T })
-inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftControl })
+inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })
 
 animationModule:refresh()
+
+character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)

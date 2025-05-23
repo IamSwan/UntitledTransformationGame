@@ -22,9 +22,11 @@ return function(player: Player)
 			primeSound:Play()
 		end
 		primeSound.Ended:Wait()
-		local primedLoop = core.Core["PrimedLoop"]
-		if primedLoop then
-			primedLoop:Play()
+		if not player.Character:GetAttribute("Priming") then
+			local primedLoop = core.Core["PrimedLoop"]
+			if primedLoop then
+				primedLoop:Play()
+			end
 		end
 		task.delay(cooldownModule.SharedCooldowns.Prime, function()
 			cooldownModule:Stop(player, "Busy")

@@ -1,10 +1,11 @@
 local animModule = {}
 
 local animations: { [string]: AnimationTrack } = {}
+local priorities: { [string]: Enum.AnimationPriority } = {}
 
 local player = game.Players.LocalPlayer
 
-function animModule:addAnimation(name: string, id: string, looped: boolean)
+function animModule:addAnimation(name: string, id: string, looped: boolean, priority: Enum.AnimationPriority?)
 	if animations[name] then
 		return
 	end
@@ -18,8 +19,9 @@ function animModule:addAnimation(name: string, id: string, looped: boolean)
 	animation.AnimationId = id
 	track = animator:LoadAnimation(animation)
 	if track then
+		track.Looped = looped
+		priorities[name] = priority or Enum.AnimationPriority.Action
 		animations[name] = track
-		animations[name].Looped = looped
 	end
 end
 
@@ -44,9 +46,40 @@ function animModule:Play(name: string, delay: number?, speed: number?)
 		return
 	end
 	track:Play(delay)
+	track.Priority = priorities[name]
 	if speed then
 		track:AdjustSpeed(speed)
 	end
+end
+
+function animModule:setNewId(name: string, id: string)
+	local track: AnimationTrack = animations[name]
+	if not track then
+		return
+	end
+	local animation = Instance.new("Animation")
+	animation.AnimationId = id
+	track:Stop()
+	animations[name] = nil
+	self:addAnimation(name, id, track.Looped, priorities[name])
+	track:Destroy()
+end
+
+function animModule:StopAll(delay: number?)
+	for index, value in pairs(animations) do
+		local track: AnimationTrack = animations[index]
+		if not track then
+			return
+		end
+		track:AdjustWeight(0, delay)
+		task.delay(delay, function()
+			track:Stop()
+		end)
+	end
+end
+
+function animModule:getAllTracks()
+	return animations
 end
 
 function animModule:refresh()

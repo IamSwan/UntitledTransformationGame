@@ -20,7 +20,11 @@ local function applyAlienStats(player: Player, alien: string)
 	hum.MaxHealth = aStats.MaxHealth
 	hum.Health = math.clamp(aStats.MaxHealth * ratio, 0, aStats.MaxHealth)
 
-	hum.WalkSpeed = aStats.WalkSpeed
+	if player.Character:GetAttribute("Sprinting") then
+		hum.WalkSpeed = aStats.RunSpeed
+	else
+		hum.WalkSpeed = aStats.WalkSpeed
+	end
 	hum.JumpHeight = aStats.JumpHeight
 
 	local h = "Health: " .. hum.Health

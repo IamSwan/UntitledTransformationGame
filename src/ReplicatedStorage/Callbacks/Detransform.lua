@@ -3,9 +3,7 @@
 local cooldownModule = require(game.ReplicatedStorage.Modules.Cooldown)
 local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
 local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
-local transformModule = require(game.ReplicatedStorage.Modules.TransformModule)
-local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModule)
-local transformConfig = require(game.ReplicatedStorage.Configs.TransformConfig)
+local aliensAnims = require(game.ReplicatedStorage.Configs.AliensAnims)
 
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
 
@@ -45,7 +43,9 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 				animationModule:getTrack(alienAnimName):GetMarkerReachedSignal("Trigger"):Wait()
 			end
 		end
-
+		animationModule:setNewId("Idle", aliensAnims["Human"]["Idle"])
+		animationModule:setNewId("Walk", aliensAnims["Human"]["Walk"])
+		animationModule:setNewId("Run", aliensAnims["Human"]["Run"])
 		replicatedStorage.Remotes.ActionRemote:FireServer(action)
 	end
 
