@@ -55,5 +55,13 @@ local function onPlayerRemoved(player: Player)
 	alienPlaylistManager:SetPlaylist(player, nil)
 end
 
+local function SetUpDummy()
+	local Rig = workspace:WaitForChild("Rig")
+	
+	CombatClass.new(Rig)
+end
+
 --|| Hooks ||--
+
+SetUpDummy()
 playerService.PlayerAdded:Connect(onPlayerAdded)

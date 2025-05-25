@@ -1,14 +1,34 @@
 --|| Config ||--
-local config = require(game.ReplicatedStorage.Configs.TransformConfig)
 local alienStats = require(game.ReplicatedStorage.Configs.AliensStats)
+local aliensAnims = require(game.ReplicatedStorage.Configs.AliensAnims)
+local aliensMoves = require(game.ReplicatedStorage.Configs.AliensMoves)
 
 --|| Dependencies ||--
 local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModule)
+local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
+local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
 
 --|| Module ||--
 local transformModule = {}
 
 --|| Private functions ||--
+local function applyMoves(player: Player, alien: string)
+	local moves = aliensMoves[alien]
+	if not moves then
+		return
+	end
+	inputBinder:ForceBindFromServer(player, moves["Movement"], {Enum.KeyCode.V})
+end
+
+local function unapplyMoves(player: Player, alien: string)
+	if not alien then return end
+	local moves = aliensMoves[alien]
+	if not moves then
+		return
+	end
+	inputBinder:ForceUnbindFromServer(player, moves["Movement"])
+end
+
 local function applyAlienStats(player: Player, alien: string)
 	local aStats = alienStats[alien]
 	if not aStats then
@@ -30,6 +50,10 @@ local function applyAlienStats(player: Player, alien: string)
 	local h = "Health: " .. hum.Health
 	local mh = "MaxHealth: " .. hum.MaxHealth
 	local ws = "WalkSpeed: " .. hum.WalkSpeed
+
+	animationModule:setNewId("Idle", aliensAnims[alien]["Idle"], player)
+	animationModule:setNewId("Walk", aliensAnims[alien]["Walk"], player)
+	animationModule:setNewId("Run", aliensAnims[alien]["Run"], player)
 
 	game.ReplicatedStorage.Remotes.Debug:FireClient(player, h)
 	game.ReplicatedStorage.Remotes.Debug:FireClient(player, mh)
@@ -142,6 +166,7 @@ function transformModule:transform(player: Player, alien: string)
 	transformModule:displayAlienBadge(player, true)
 
 	applyAlienStats(player, alien)
+	applyMoves(player, alien)
 
 	if not player.Character:GetAttribute("Transformed") then
 		player.Character:SetAttribute("Transformed", true)
@@ -168,7 +193,7 @@ function transformModule:detransform(player: Player)
 		return
 	end
 	abilityModule = require(abilityModule)
-
+	unapplyMoves(player, player.Character:GetAttribute("Alien"))
 	player.Character:SetAttribute("Transformed", nil)
 	abilityModule:detransform(player)
 	transformModule:setInvisible(player.Character, false)
@@ -176,6 +201,11 @@ function transformModule:detransform(player: Player)
 	batteryModule:rechargeBattery(player)
 	player.Character:SetAttribute("Alien", nil)
 	applyAlienStats(player, "Human")
+	applyMoves(player, "Human")
+	if player.Character:GetAttribute("Flying") then
+		print("hello")
+		game.ReplicatedStorage.Remotes.ActionRemote:FireClient(player, "Fly", Enum.UserInputState.Begin)
+	end
 end
 
 if game:GetService("RunService"):IsServer() then

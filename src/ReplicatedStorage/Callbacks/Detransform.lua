@@ -43,9 +43,6 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 				animationModule:getTrack(alienAnimName):GetMarkerReachedSignal("Trigger"):Wait()
 			end
 		end
-		animationModule:setNewId("Idle", aliensAnims["Human"]["Idle"])
-		animationModule:setNewId("Walk", aliensAnims["Human"]["Walk"])
-		animationModule:setNewId("Run", aliensAnims["Human"]["Run"])
 		replicatedStorage.Remotes.ActionRemote:FireServer(action)
 	end
 

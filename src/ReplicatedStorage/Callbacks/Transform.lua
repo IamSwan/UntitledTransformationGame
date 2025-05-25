@@ -95,16 +95,10 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	if (player:GetAttribute("Master") or player.Character:GetAttribute("mcTransform")) and not player.Character:GetAttribute("Priming") then
 		if canTransform then
 			switchAlien(player)
-			animationModule:setNewId("Idle", aliensAnims[alienPlaylistManager:GetAlienAtIndex(player, currentAlien)]["Idle"])
-			animationModule:setNewId("Walk", aliensAnims[alienPlaylistManager:GetAlienAtIndex(player, currentAlien)]["Walk"])
-			animationModule:setNewId("Run", aliensAnims[alienPlaylistManager:GetAlienAtIndex(player, currentAlien)]["Run"])
 		end
 	elseif (not player.Character:GetAttribute("Priming")) and not player.Character:GetAttribute("Transformed") and not player.Character:GetAttribute("mcTransform") then
 		if canTransform then
 			randomTransform(player)
-			animationModule:setNewId("Idle", aliensAnims[alienPlaylistManager:GetAlienAtIndex(player, currentAlien)]["Idle"])
-			animationModule:setNewId("Walk", aliensAnims[alienPlaylistManager:GetAlienAtIndex(player, currentAlien)]["Walk"])
-			animationModule:setNewId("Run", aliensAnims[alienPlaylistManager:GetAlienAtIndex(player, currentAlien)]["Run"])
 		else
 			vfxRemote:FireServer("PrototypeOmnitrixLightCore", player.Character.HumanoidRootPart)
 			animationModule:getTrack("PrototypeOmnitrixSlam").Ended:Wait()
@@ -113,9 +107,6 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	elseif canTransform then
 		if canTransform then
 			normalTransform(player)
-			animationModule:setNewId("Idle", aliensAnims[alienPlaylistManager:GetAlienAtIndex(player, currentAlien)]["Idle"])
-			animationModule:setNewId("Walk", aliensAnims[alienPlaylistManager:GetAlienAtIndex(player, currentAlien)]["Walk"])
-			animationModule:setNewId("Run", aliensAnims[alienPlaylistManager:GetAlienAtIndex(player, currentAlien)]["Run"])
 		end
 	end
 	player.Character:SetAttribute("mcTransform", nil)

@@ -1,5 +1,8 @@
 local inputBinderModule = {}
 
+local bindRemote = game.ReplicatedStorage.Remotes.BindRemote
+local unbindRemote = game.ReplicatedStorage.Remotes.UnbindRemote
+
 function inputBinderModule:BindAction(action: string, keys: { Enum.KeyCode | Enum.UserInputType })
 	local contextActionService = game:GetService("ContextActionService")
 
@@ -25,6 +28,14 @@ function inputBinderModule:RunBindlessAction(action: string, state: Enum.UserInp
 	end
 	actionCallback = require(actionCallbackModule)
 	actionCallback(action, state)
+end
+
+function inputBinderModule:ForceBindFromServer(player: Player, action: string, keys: { Enum.KeyCode | Enum.UserInputType })
+	bindRemote:FireClient(player, action, keys)
+end
+
+function inputBinderModule:ForceUnbindFromServer(player: Player, action: string)
+	unbindRemote:FireClient(player, action)
 end
 
 function inputBinderModule:UnbindAction(action: string)

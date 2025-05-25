@@ -1,3 +1,4 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local animModule = {}
 
 local animations: { [string]: AnimationTrack } = {}
@@ -52,7 +53,10 @@ function animModule:Play(name: string, delay: number?, speed: number?)
 	end
 end
 
-function animModule:setNewId(name: string, id: string)
+function animModule:setNewId(name: string, id: string, player: Player?)
+	if game:GetService("RunService"):IsServer() then
+		game.ReplicatedStorage.Remotes.AnimationRemote:FireClient(player, name, id)
+	end
 	local track: AnimationTrack = animations[name]
 	if not track then
 		return
@@ -87,6 +91,12 @@ function animModule:refresh()
 		local anim = animations[index].Animation
 		animations[index] = player.Character.Humanoid.Animator:LoadAnimation(anim)
 	end
+end
+
+if game:GetService("RunService"):IsClient() then
+	game.ReplicatedStorage.Remotes.AnimationRemote.OnClientEvent:Connect(function(name: string, id: string)
+		animModule:setNewId(name, id)
+	end)
 end
 
 return animModule

@@ -29,36 +29,23 @@ local SpeedDebuffAttributes = {
 	"BlockBroken",
 }
 
-local Interface = {}
-
-local Classes = {}
-
-
 local CombatClass = {}
-
 
 --|| Config ||--
 
 CombatClass.__index = CombatClass
-CombatClass.__tostring = function(Class : CombatClass)
-	return Class.Character.Name
-end
 
 --|| Functions ||--
 
 
 --|| Methods ||--
 
-function Interface.FromCharacter(Character : Model) : typeof(CombatClass)
-	return Classes[Character]
-end
-
-function Interface.new(Character : Model) : typeof(CombatClass)
+function CombatClass.new(Character : Model) : typeof(CombatClass)
 	local self : typeof(CombatClass) = setmetatable({},CombatClass)
 
 	self:_Construct(Character)
 
-	warn(`Character Class successfully created! for {Character.Name}`)
+	warn(`Character Class successfully created for {Character.Name}`)
 
 	return self
 end
@@ -84,7 +71,6 @@ function CombatClass._Construct(self : typeof(CombatClass),Character : Model)
 		end)
 
 		local Died = self.Humanoid.Died:Once(function()
-			Maid:Clean()
 			Character:AddTag("Died")
 		end)
 
@@ -103,13 +89,6 @@ function CombatClass._Construct(self : typeof(CombatClass),Character : Model)
 	StateActions()
 
 	Character:AddTag("Character")
-
-	Classes[Character] = self
-
-	Maid:Add(function()
-		Classes[Character] = nil
-	end)
-
 end
 
 function CombatClass.Stun(self : typeof(CombatClass),Value : boolean)
@@ -133,7 +112,5 @@ function CombatClass.Stun(self : typeof(CombatClass),Value : boolean)
 	end
 end
 
-export type CombatClass = typeof(CombatClass)
 
-
-return Interface
+return CombatClass

@@ -43,6 +43,7 @@ return table.freeze({
 		["WalkSpeed"] = 12,
 		["RunSpeed"] = 12 * 2.5,
 		["JumpHeight"] = 7.2,
+		["FlySpeed"] = 150,
 	},
 	["Dummian"] = {
 		["MaxHealth"] = 9999,
@@ -50,5 +51,6 @@ return table.freeze({
 		["WalkSpeed"] = 20,
 		["RunSpeed"] = 80 * 3,
 		["JumpHeight"] = 30,
+		["FlySpeed"] = 500,
 	},
 })

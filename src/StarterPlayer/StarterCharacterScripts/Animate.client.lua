@@ -16,8 +16,22 @@ local state = ""
 --|| Functions ||--
 
 local function onHeartbeat()
+    if player:GetAttribute("Flying_local") then
+        animationsModule:Stop("Idle", .1)
+        animationsModule:Stop("Walk", .1)
+        animationsModule:Stop("Run", .1)
+        return
+    end
 	local moveMag = humanoid.MoveDirection.Magnitude
 	local isJumping = humanoid:GetState() == Enum.HumanoidStateType.Jumping
+    local isFlying = player.Character:GetAttribute("Flying")
+
+    if isFlying then
+        animationsModule:Stop("Idle", .1)
+        animationsModule:Stop("Walk", .1)
+        animationsModule:Stop("Run", .1)
+        return
+    end
 
 	if math.round(moveMag) == 0 and not isJumping then
 		if not animationsModule:getTrack("Idle").IsPlaying then
