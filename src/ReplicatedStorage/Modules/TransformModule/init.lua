@@ -58,6 +58,11 @@ local function applyAlienStats(player: Player, alien: string)
 	game.ReplicatedStorage.Remotes.Debug:FireClient(player, h)
 	game.ReplicatedStorage.Remotes.Debug:FireClient(player, mh)
 	game.ReplicatedStorage.Remotes.Debug:FireClient(player, ws)
+
+	-- Later we'll need to check for unlocked moves
+	if not aStats.FlySpeed and player.Character:GetAttribute("Flying") then
+		game.ReplicatedStorage.Remotes.ActionRemote:FireClient(player, "Fly", Enum.UserInputState.Begin)
+	end
 end
 
 --|| Public functions ||--
@@ -156,6 +161,7 @@ function transformModule:transform(player: Player, alien: string)
 	end
 	abilityModule = require(abilityModule)
 
+	unapplyMoves(player, player.Character:GetAttribute("Alien"))
 	player.Character:SetAttribute("Priming", nil)
 
 	abilityModule:transform(player, alien)
@@ -203,7 +209,6 @@ function transformModule:detransform(player: Player)
 	applyAlienStats(player, "Human")
 	applyMoves(player, "Human")
 	if player.Character:GetAttribute("Flying") then
-		print("hello")
 		game.ReplicatedStorage.Remotes.ActionRemote:FireClient(player, "Fly", Enum.UserInputState.Begin)
 	end
 end

@@ -40,18 +40,18 @@ local function onFlyUpdate()
     -- Apply gravity
     vectorForce.Force = GRAVITY * character.PrimaryPart.AssemblyMass
 
-    local flySpeed = 50
+    local flySpeed = nil
     local aStats = alienStats[player.Character:GetAttribute("Alien")]
+
+    if aStats then
+        flySpeed = aStats.FlySpeed or 50
+    end
 
     if moveDirection.Magnitude > 0 then
         -- Calculate the desired movement direction based on camera orientation
         local desiredDirection = moveVector
         -- Apply the force in the desired direction
-        moveVector = moveVector.Unit
 
-        if aStats then
-            flySpeed = aStats.FlySpeed or 50
-        end
         vectorForce.Force += desiredDirection * flySpeed * character.PrimaryPart.AssemblyMass
     end
 
