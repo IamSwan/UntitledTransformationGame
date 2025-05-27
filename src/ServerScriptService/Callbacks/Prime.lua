@@ -22,7 +22,7 @@ return function(player: Player)
 			primeSound:Play()
 		end
 		primeSound.Ended:Wait()
-		if not player.Character:GetAttribute("Priming") then
+		if player.Character:GetAttribute("Priming") then
 			local primedLoop = core.Core["PrimedLoop"]
 			if primedLoop then
 				primedLoop:Play()

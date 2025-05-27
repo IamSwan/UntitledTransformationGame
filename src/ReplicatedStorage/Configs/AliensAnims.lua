@@ -28,6 +28,8 @@ aliensAnims["Ectonurite"] = {
     ["Idle"] = "rbxassetid://106634925717503",
     ["Walk"] = "rbxassetid://86972054008848",
     ["Run"] = "rbxassetid://126942311940781",
+    ["FlyIdle"] = "rbxassetid://106634925717503",
+    ["FlyForward"] = "rbxassetid://126942311940781",
 }
 
 aliensAnims["Dummian"] = {

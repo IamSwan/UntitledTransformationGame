@@ -56,17 +56,29 @@ end
 function animModule:setNewId(name: string, id: string, player: Player?)
 	if game:GetService("RunService"):IsServer() then
 		game.ReplicatedStorage.Remotes.AnimationRemote:FireClient(player, name, id)
-	end
-	local track: AnimationTrack = animations[name]
-	if not track then
 		return
 	end
+	if #id == 0 then
+		if animations[name] then
+			animations[name]:Stop()
+			animations[name]:Destroy()
+		end
+		animations[name] = nil
+		return
+	end
+	local track: AnimationTrack = animations[name]
 	local animation = Instance.new("Animation")
 	animation.AnimationId = id
-	track:Stop()
+	if track then
+		track:Stop()
+	end
 	animations[name] = nil
-	self:addAnimation(name, id, track.Looped, priorities[name])
-	track:Destroy()
+	if track then
+		self:addAnimation(name, id, track.Looped, priorities[name])
+		track:Destroy()
+	else
+		self:addAnimation(name, id, true, priorities[name])
+	end
 end
 
 function animModule:StopAll(delay: number?)

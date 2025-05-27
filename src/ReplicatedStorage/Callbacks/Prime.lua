@@ -6,6 +6,9 @@ local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
 local player = game.Players.LocalPlayer
 
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
+local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
+
+local gui = player.PlayerGui:WaitForChild("AlienDisplay")
 
 return function(action: string, state: Enum.UserInputState, inputObject: InputObject)
 	if state ~= Enum.UserInputState.Begin then
@@ -22,6 +25,7 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 		print("Unpriming")
 		inputBinder:UnbindAction("DialRight")
 		inputBinder:UnbindAction("DialLeft")
+		gui.Enabled = false
 		animationModule:Stop("PrototypeOmnitrixPrime", 0)
 		animationModule:Stop("PrototypeOmnitrixPrimeIdle", 0.2)
 		animationModule:Play("PrototypeOmnitrixEndPrime", 0.2, 0.4)
@@ -30,6 +34,8 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 		print("Priming")
 		animationModule:Play("PrototypeOmnitrixPrime", 0.2)
 		game.ReplicatedStorage.Remotes.ActionRemote:FireServer(action)
+		gui.Enabled = true
+		gui.AlienSelection.Text = alienPlaylistManager:GetAlienAtIndex(player, player.Character:GetAttribute("CurrentSelection") or 1)
 		animationModule:getTrack("PrototypeOmnitrixPrime"):GetMarkerReachedSignal("Trigger"):Wait()
 		animationModule:Play("PrototypeOmnitrixPrimeIdle")
 		inputBinder:BindAction("DialRight", { Enum.KeyCode.E })

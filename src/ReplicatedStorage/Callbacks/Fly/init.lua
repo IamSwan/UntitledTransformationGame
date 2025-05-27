@@ -40,7 +40,7 @@ local function onFlyUpdate()
     -- Apply gravity
     vectorForce.Force = GRAVITY * character.PrimaryPart.AssemblyMass
 
-    local flySpeed = nil
+    local flySpeed = 50
     local aStats = alienStats[player.Character:GetAttribute("Alien")]
 
     if aStats then
@@ -120,6 +120,8 @@ local function stopFly()
         alignOrientation:Destroy()
     end
     character.Humanoid:ChangeState(Enum.HumanoidStateType.Freefall)
+    character:SetAttribute("FlyUp", nil)
+    character:SetAttribute("FlyDown", nil)
     inputBinder:UnbindAction("FlyUp")
     inputBinder:UnbindAction("FlyDown")
 end

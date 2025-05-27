@@ -7,28 +7,13 @@ local aliensMoves = require(game.ReplicatedStorage.Configs.AliensMoves)
 local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModule)
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
 local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
+local alienMoves = require(game.ReplicatedStorage.Configs.AliensMoves)
+local keybinds = require(game.ReplicatedStorage.Configs.Keybinds)
 
 --|| Module ||--
 local transformModule = {}
 
 --|| Private functions ||--
-local function applyMoves(player: Player, alien: string)
-	local moves = aliensMoves[alien]
-	if not moves then
-		return
-	end
-	inputBinder:ForceBindFromServer(player, moves["Movement"], {Enum.KeyCode.V})
-end
-
-local function unapplyMoves(player: Player, alien: string)
-	if not alien then return end
-	local moves = aliensMoves[alien]
-	if not moves then
-		return
-	end
-	inputBinder:ForceUnbindFromServer(player, moves["Movement"])
-end
-
 local function applyAlienStats(player: Player, alien: string)
 	local aStats = alienStats[alien]
 	if not aStats then
@@ -40,32 +25,55 @@ local function applyAlienStats(player: Player, alien: string)
 	hum.MaxHealth = aStats.MaxHealth
 	hum.Health = math.clamp(aStats.MaxHealth * ratio, 0, aStats.MaxHealth)
 
+	local walkSpeed
 	if player.Character:GetAttribute("Sprinting") then
 		hum.WalkSpeed = aStats.RunSpeed
+		walkSpeed = aStats.RunSpeed
 	else
 		hum.WalkSpeed = aStats.WalkSpeed
+		walkSpeed = aStats.WalkSpeed
 	end
 	hum.JumpHeight = aStats.JumpHeight
-
-	local h = "Health: " .. hum.Health
-	local mh = "MaxHealth: " .. hum.MaxHealth
-	local ws = "WalkSpeed: " .. hum.WalkSpeed
 
 	animationModule:setNewId("Idle", aliensAnims[alien]["Idle"], player)
 	animationModule:setNewId("Walk", aliensAnims[alien]["Walk"], player)
 	animationModule:setNewId("Run", aliensAnims[alien]["Run"], player)
+	if aliensAnims[alien]["FlyIdle"] then
+		animationModule:setNewId("FlyIdle", aliensAnims[alien]["FlyIdle"], player)
+	else
+		animationModule:setNewId("FlyIdle", "", player)
+	end
+	if aliensAnims[alien]["FlyForward"] then
+		animationModule:setNewId("FlyForward", aliensAnims[alien]["FlyForward"], player)
+	else
+		animationModule:setNewId("FlyForward", "", player)
+	end
 
-	game.ReplicatedStorage.Remotes.Debug:FireClient(player, h)
-	game.ReplicatedStorage.Remotes.Debug:FireClient(player, mh)
-	game.ReplicatedStorage.Remotes.Debug:FireClient(player, ws)
+	game.ReplicatedStorage.Remotes.Debug:FireClient(player,
+		"Applying stats for " .. alien .. ": MaxHealth: " .. aStats.MaxHealth .. ", WalkSpeed: " .. walkSpeed
+	)
 
-	-- Later we'll need to check for unlocked moves
-	if not aStats.FlySpeed and player.Character:GetAttribute("Flying") then
-		game.ReplicatedStorage.Remotes.ActionRemote:FireClient(player, "Fly", Enum.UserInputState.Begin)
+	if player.Character:GetAttribute("Flying") then
+		if not aStats.FlySpeed then
+			game.ReplicatedStorage.Remotes.ActionRemote:FireClient(player, "Fly", Enum.UserInputState.Begin)
+			return
+		end
+		game.ReplicatedStorage.Remotes.BindRemote:FireClient(player, "FlyUp", {Enum.KeyCode.Space})
+		game.ReplicatedStorage.Remotes.BindRemote:FireClient(player, "FlyDown", {Enum.KeyCode.LeftAlt})
 	end
 end
 
 --|| Public functions ||--
+function transformModule:applyMoves(player, alien)
+	local moves = alienMoves[alien]
+	if not moves then return end
+	for index, value in pairs(moves) do
+		if keybinds[index] then
+			inputBinder:BindAction(value, keybinds[index])
+		end
+	end
+end
+
 function transformModule:setBodyScale(character: Model, alien: string)
 	if not game:GetService("RunService"):IsServer() then
 		return
@@ -161,7 +169,6 @@ function transformModule:transform(player: Player, alien: string)
 	end
 	abilityModule = require(abilityModule)
 
-	unapplyMoves(player, player.Character:GetAttribute("Alien"))
 	player.Character:SetAttribute("Priming", nil)
 
 	abilityModule:transform(player, alien)
@@ -172,7 +179,6 @@ function transformModule:transform(player: Player, alien: string)
 	transformModule:displayAlienBadge(player, true)
 
 	applyAlienStats(player, alien)
-	applyMoves(player, alien)
 
 	if not player.Character:GetAttribute("Transformed") then
 		player.Character:SetAttribute("Transformed", true)
@@ -199,7 +205,6 @@ function transformModule:detransform(player: Player)
 		return
 	end
 	abilityModule = require(abilityModule)
-	unapplyMoves(player, player.Character:GetAttribute("Alien"))
 	player.Character:SetAttribute("Transformed", nil)
 	abilityModule:detransform(player)
 	transformModule:setInvisible(player.Character, false)
@@ -207,7 +212,6 @@ function transformModule:detransform(player: Player)
 	batteryModule:rechargeBattery(player)
 	player.Character:SetAttribute("Alien", nil)
 	applyAlienStats(player, "Human")
-	applyMoves(player, "Human")
 	if player.Character:GetAttribute("Flying") then
 		game.ReplicatedStorage.Remotes.ActionRemote:FireClient(player, "Fly", Enum.UserInputState.Begin)
 	end

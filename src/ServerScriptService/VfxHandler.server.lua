@@ -9,6 +9,7 @@ local vfxRemote = remotes:FindFirstChild("VFXRemote")
 local allowedRequests = {
     "PrototypeOmnitrixLightCore",
     "PrototypeOmnitrixDisableCore",
+    "PrototypeOmnitrixPrimeSound"
 }
 
 --|| Functions ||--

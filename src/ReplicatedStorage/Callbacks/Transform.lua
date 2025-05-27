@@ -4,13 +4,18 @@ local cooldownModule = require(game.ReplicatedStorage.Modules.Cooldown)
 local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
 local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
 local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModule)
+local transformModule = require(game.ReplicatedStorage.Modules.TransformModule)
 
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
-local aliensAnims = require(game.ReplicatedStorage.Configs.AliensAnims)
 
 local replicatedStorage = game:GetService("ReplicatedStorage")
 
 local vfxRemote = replicatedStorage.Remotes.VFXRemote
+
+local player = game.Players.LocalPlayer
+
+local gui = player.PlayerGui:WaitForChild("AlienDisplay")
+
 
 local function handleCantTransform(player)
 	if not player.Character:GetAttribute("Priming") then
@@ -24,30 +29,39 @@ local function switchAlien(player)
 	local alien = alienPlaylistManager:GetAlienAtIndex(player, player.Character:GetAttribute("CurrentSelection"))
 
 	replicatedStorage.Remotes.ActionRemote:FireServer("Transform", alien)
-	if not player.Character:GetAttribute("Transformed") then
-		inputBinder:UnbindAction("Prime")
-		inputBinder:BindAction("QuickChange", { Enum.KeyCode.U })
-		inputBinder:BindAction("Detransform", { Enum.KeyCode.T })
-	end
+	inputBinder:UnbindAllActions()
+	inputBinder:BindAction("QuickChange", { Enum.KeyCode.U })
+	inputBinder:BindAction("Detransform", { Enum.KeyCode.T })
+	inputBinder:BindAction("DialLeft", { Enum.KeyCode.Q })
+	inputBinder:BindAction("DialRight", { Enum.KeyCode.E })
+	inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })
+	inputBinder:BindAction("Shiftlock", { Enum.KeyCode.LeftControl })
+	transformModule:applyMoves(player, alien)
+	gui.Enabled = false
 	print("Transforming to: " .. alien)
 end
 
 local function randomTransform(player)
-	inputBinder:UnbindAction("Prime")
+	inputBinder:UnbindAllActions()
+	inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })
+	inputBinder:BindAction("Shiftlock", { Enum.KeyCode.LeftControl })
 	inputBinder:BindAction("QuickChange", { Enum.KeyCode.U })
 	inputBinder:BindAction("Detransform", { Enum.KeyCode.T })
 	local randomIndex = math.random(1, #alienPlaylistManager:GetPlaylist(game.Players.LocalPlayer))
 	local randomAlien = alienPlaylistManager:GetAlienAtIndex(game.Players.LocalPlayer, randomIndex)
+	vfxRemote:FireServer("PrototypeOmnitrixLightCore", player.Character.HumanoidRootPart)
+	vfxRemote:FireServer("PrototypeOmnitrixPrimeSound", player.Character.HumanoidRootPart)
 	animationModule:Play("PrototypeOmnitrixPrime", 0.3)
 	animationModule:getTrack("PrototypeOmnitrixPrime"):GetMarkerReachedSignal("Trigger"):Wait()
-	vfxRemote:FireServer("PrototypeOmnitrixLightCore", player.Character.HumanoidRootPart)
 	animationModule:Play("PrototypeOmnitrixSlam", 0.3)
 	animationModule:Stop("PrototypeOmnitrixPrimeIdle", 0.1)
 	animationModule:getTrack("PrototypeOmnitrixSlam"):GetMarkerReachedSignal("Trigger"):Wait()
 	animationModule:Stop("PrototypeOmnitrixSlam", 0)
 	replicatedStorage.Remotes.ActionRemote:FireServer("Transform", randomAlien)
+	transformModule:applyMoves(player, randomAlien)
 	vfxRemote:FireServer("PrototypeOmnitrixDisableCore", player.Character.HumanoidRootPart)
 	game.Players.LocalPlayer.Character:SetAttribute("CurrentSelection", randomIndex)
+	gui.Enabled = false
 	print("Transforming to: " .. randomAlien)
 end
 
@@ -57,14 +71,22 @@ local function normalTransform(player)
 	animationModule:Stop("PrototypeOmnitrixPrime", 0)
 	animationModule:Stop("PrototypeOmnitrixPrimeIdle", 0.1)
 
-	inputBinder:UnbindAction("Prime")
+	inputBinder:UnbindAllActions()
 	inputBinder:BindAction("QuickChange", { Enum.KeyCode.U })
 	inputBinder:BindAction("Detransform", { Enum.KeyCode.T })
+	inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })
+	inputBinder:BindAction("Shiftlock", { Enum.KeyCode.LeftControl })
+	transformModule:applyMoves(player, alien)
+	if player:GetAttribute("Master") then
+		inputBinder:BindAction("DialLeft", { Enum.KeyCode.Q })
+		inputBinder:BindAction("DialRight", { Enum.KeyCode.E })
+	end
 
 	animationModule:Play("PrototypeOmnitrixSlam")
 	animationModule:getTrack("PrototypeOmnitrixSlam"):GetMarkerReachedSignal("Trigger"):Wait()
 	animationModule:Stop("PrototypeOmnitrixSlam", 0)
 	replicatedStorage.Remotes.ActionRemote:FireServer("Transform", alien)
+	gui.Enabled = false
 	print("Transforming to: " .. alien)
 
 end

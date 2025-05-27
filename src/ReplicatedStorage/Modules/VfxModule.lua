@@ -106,6 +106,18 @@ vfx.PrototypeOmnitrixBlinkMaster = function(origin: CFrame | Part)
 	until i == 0
 end
 
+vfx.PrototypeOmnitrixPrimeSound = function(origin: CFrame | Part)
+	local character: Model = origin.Parent
+
+	local proto = character:FindFirstChild("PrototypeOmnitrix")
+	local core = proto["Moving core"]
+
+	local primeSound: Sound = core.Core["Prime1"]
+	if primeSound then
+		primeSound:Play()
+	end
+end
+
 function vfx:RequestVFX(vfxName: string, origin: CFrame | Part)
 	game.ReplicatedStorage.Remotes.VFXRemote:FireServer(vfxName, origin)
 end

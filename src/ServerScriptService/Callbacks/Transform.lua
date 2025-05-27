@@ -6,11 +6,6 @@ local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModu
 local transformConfig = require(game.ReplicatedStorage.Configs.TransformConfig)
 local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
 
-local chatService = game:GetService"TextChatService"
-
-local vfxRemote = game.ReplicatedStorage.Remotes.VFXRemote
-
-
 return function(player: Player, alien: string)
 	if not cooldownModule:IsFinished(player, "Busy") then
 		print("busy.")
@@ -47,9 +42,9 @@ return function(player: Player, alien: string)
 	if misTransform then
 		local randomIndex = math.random(1, #alienPlaylistManager:GetPlaylist(player))
 		local randomAlien = alienPlaylistManager:GetAlienAtIndex(player, randomIndex)
-		chatService:DisplayBubble(player.Character, randomAlien.."?! This watch never listens..")
 		player.Character:SetAttribute("CurrentSelection", randomIndex)
 		transformModule:transform(player, randomAlien)
+		game.ReplicatedStorage.Remotes.CustomChatRemote:FireAllClients(player, `Awww man! I wanted a {alien}, not a {randomAlien}!`)
 		print("mistransform")
 	else
 		transformModule:transform(player, alien)

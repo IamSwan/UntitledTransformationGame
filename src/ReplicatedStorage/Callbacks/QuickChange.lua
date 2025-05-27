@@ -42,6 +42,17 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 		alienPlaylistManager:GetAlienAtIndex(game.Players.LocalPlayer, randomSelect)
 	)
 	game.Players.LocalPlayer.Character:SetAttribute("CurrentSelection", randomSelect)
+	inputBinder:UnbindAllActions()
+	transformModule:applyMoves(player, alienPlaylistManager:GetAlienAtIndex(player, randomSelect))
+	inputBinder:BindAction("QuickChange", { Enum.KeyCode.U })
+	inputBinder:BindAction("Detransform", { Enum.KeyCode.T })
+	inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })
+	inputBinder:BindAction("Shiftlock", { Enum.KeyCode.LeftControl })
+	if player:GetAttribute("Master") then
+		inputBinder:BindAction("DialLeft", { Enum.KeyCode.Q })
+		inputBinder:BindAction("DialRight", { Enum.KeyCode.E })
+	end
+
 	print("Transforming to: " .. alienPlaylistManager:GetAlienAtIndex(game.Players.LocalPlayer, randomSelect))
 	return Enum.ContextActionResult.Sink
 end

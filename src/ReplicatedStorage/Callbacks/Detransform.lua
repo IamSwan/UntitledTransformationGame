@@ -27,10 +27,11 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	end
 	if player.Character:GetAttribute("Transformed") then
 		print("Detransforming")
-
+		inputBinder:UnbindAllActions()
 		inputBinder:BindAction("Prime", { Enum.KeyCode.R })
 		inputBinder:BindAction("Transform", { Enum.KeyCode.T })
-		inputBinder:UnbindAction("QuickChange")
+		inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })
+		inputBinder:BindAction("Shiftlock", { Enum.KeyCode.LeftControl })
 		if not player:GetAttribute("Master") and inputObject ~= nil then
 			local alienAnimName = player:GetAttribute("Ability")
 				.. player.Character:GetAttribute("Alien")
