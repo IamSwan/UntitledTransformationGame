@@ -85,12 +85,12 @@ local function startFly()
         return
     end
     humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-    local vectorForce = script:FindFirstChild("VectorForce"):Clone()
+    local vectorForce = game.ReplicatedStorage.Assets.Forces.VectorForce:Clone()
     vectorForce.Name = "FlyVector"
     vectorForce.Enabled = true
     vectorForce.Parent = character.PrimaryPart
     vectorForce.Attachment0 = character.PrimaryPart:FindFirstChild("RootAttachment") or Instance.new("Attachment", character.PrimaryPart)
-    local alignOrientation = script:FindFirstChild("AlignOrientation"):Clone()
+    local alignOrientation = game.ReplicatedStorage.Assets.Forces.AlignOrientation:Clone()
     alignOrientation.Parent = character.PrimaryPart
     alignOrientation.Attachment0 = character.PrimaryPart:FindFirstChild("RootAttachment") or Instance.new("Attachment", character.PrimaryPart)
     alignOrientation.Enabled = true

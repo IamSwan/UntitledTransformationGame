@@ -22,6 +22,9 @@ local function onPlayerAdded(player: Player)
 	-- load data
 	local PLACEHOLDER_PLAYLIST = { "Pyronite", "Kineceleran", "Petrosapien", "Ectonurite", "Dummian" }
 
+	if player.Name == "IamSwanDEV" then
+		table.insert(PLACEHOLDER_PLAYLIST, "Chronosapien")
+	end
 	alienPlaylistManager:SetPlaylist(player, PLACEHOLDER_PLAYLIST)
 	replicatedStorage.Remotes.PlaylistRemote:FireClient(player, PLACEHOLDER_PLAYLIST)
 	player:SetAttribute("Ability", "PrototypeOmnitrix")
@@ -57,7 +60,7 @@ end
 
 local function SetUpDummy()
 	local Rig = workspace:WaitForChild("Rig")
-	
+
 	CombatClass.new(Rig)
 end
 

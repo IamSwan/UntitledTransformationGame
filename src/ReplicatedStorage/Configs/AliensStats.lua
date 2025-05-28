@@ -53,4 +53,11 @@ return table.freeze({
 		["JumpHeight"] = 30,
 		["FlySpeed"] = 500,
 	},
+	["Chronosapien"] = {
+		["MaxHealth"] = 150,
+		["AttackMult"] = 1.5,
+		["WalkSpeed"] = 12,
+		["RunSpeed"] = 12 * 2.5,
+		["JumpHeight"] = 7.2,
+	},
 })

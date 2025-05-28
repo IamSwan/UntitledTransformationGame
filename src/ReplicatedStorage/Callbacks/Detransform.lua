@@ -2,8 +2,6 @@
 
 local cooldownModule = require(game.ReplicatedStorage.Modules.Cooldown)
 local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
-local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
-local aliensAnims = require(game.ReplicatedStorage.Configs.AliensAnims)
 
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
 

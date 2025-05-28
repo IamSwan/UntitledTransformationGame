@@ -35,17 +35,26 @@ local function applyAlienStats(player: Player, alien: string)
 	end
 	hum.JumpHeight = aStats.JumpHeight
 
-	animationModule:setNewId("Idle", aliensAnims[alien]["Idle"], player)
-	animationModule:setNewId("Walk", aliensAnims[alien]["Walk"], player)
-	animationModule:setNewId("Run", aliensAnims[alien]["Run"], player)
-	if aliensAnims[alien]["FlyIdle"] then
+	local alienAnimations = aliensAnims[alien]
+	if alienAnimations then
+		animationModule:setNewId("Idle", aliensAnims[alien]["Idle"], player)
+		animationModule:setNewId("Walk", aliensAnims[alien]["Walk"], player)
+		animationModule:setNewId("Run", aliensAnims[alien]["Run"], player)
+		if aliensAnims[alien]["FlyIdle"] then
 		animationModule:setNewId("FlyIdle", aliensAnims[alien]["FlyIdle"], player)
+		else
+			animationModule:setNewId("FlyIdle", "", player)
+		end
+		if aliensAnims[alien]["FlyForward"] then
+			animationModule:setNewId("FlyForward", aliensAnims[alien]["FlyForward"], player)
+		else
+			animationModule:setNewId("FlyForward", "", player)
+		end
 	else
+		animationModule:setNewId("Idle", aliensAnims["Human"]["Idle"], player)
+		animationModule:setNewId("Walk", aliensAnims["Human"]["Walk"], player)
+		animationModule:setNewId("Run", aliensAnims["Human"]["Run"], player)
 		animationModule:setNewId("FlyIdle", "", player)
-	end
-	if aliensAnims[alien]["FlyForward"] then
-		animationModule:setNewId("FlyForward", aliensAnims[alien]["FlyForward"], player)
-	else
 		animationModule:setNewId("FlyForward", "", player)
 	end
 

@@ -8,8 +8,6 @@ local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
 
 local player = game.Players.LocalPlayer
 
-local gui = player.PlayerGui:WaitForChild("AlienDisplay")
-
 return function(action: string, state: Enum.UserInputState, inputObject: InputObject)
 	if state ~= Enum.UserInputState.Begin then
 		return
@@ -53,6 +51,7 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	if currentSelection + 1 > #alienPlaylistManager:GetPlaylist(player) then
 		currentSelection = 0
 	end
+	local gui = player.PlayerGui:WaitForChild("AlienDisplay")
 	animationModule:Play("PrototypeOmnitrixDialRight")
 	player.Character:SetAttribute("CurrentSelection", currentSelection + 1)
 	gui.AlienSelection.Text = alienPlaylistManager:GetAlienAtIndex(player, currentSelection + 1)

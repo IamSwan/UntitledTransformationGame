@@ -8,8 +8,6 @@ local player = game.Players.LocalPlayer
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
 local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
 
-local gui = player.PlayerGui:WaitForChild("AlienDisplay")
-
 return function(action: string, state: Enum.UserInputState, inputObject: InputObject)
 	if state ~= Enum.UserInputState.Begin then
 		return
@@ -20,6 +18,8 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	end
 	cooldownModule:Start(player, "Busy", 99)
 	cooldownModule:Start(player, "Prime", cooldownModule.Cooldowns.Prime)
+	local gui = player.PlayerGui:WaitForChild("AlienDisplay")
+
 
 	if player.Character:GetAttribute("Priming") then
 		print("Unpriming")

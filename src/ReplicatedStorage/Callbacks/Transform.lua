@@ -14,9 +14,6 @@ local vfxRemote = replicatedStorage.Remotes.VFXRemote
 
 local player = game.Players.LocalPlayer
 
-local gui = player.PlayerGui:WaitForChild("AlienDisplay")
-
-
 local function handleCantTransform(player)
 	if not player.Character:GetAttribute("Priming") then
 		animationModule:Play("PrototypeOmnitrixPrime", 0.3)
@@ -27,6 +24,7 @@ end
 
 local function switchAlien(player)
 	local alien = alienPlaylistManager:GetAlienAtIndex(player, player.Character:GetAttribute("CurrentSelection"))
+	local gui = player.PlayerGui:WaitForChild("AlienDisplay")
 
 	replicatedStorage.Remotes.ActionRemote:FireServer("Transform", alien)
 	inputBinder:UnbindAllActions()
@@ -49,6 +47,7 @@ local function randomTransform(player)
 	inputBinder:BindAction("Detransform", { Enum.KeyCode.T })
 	local randomIndex = math.random(1, #alienPlaylistManager:GetPlaylist(game.Players.LocalPlayer))
 	local randomAlien = alienPlaylistManager:GetAlienAtIndex(game.Players.LocalPlayer, randomIndex)
+	local gui = player.PlayerGui:WaitForChild("AlienDisplay")
 	vfxRemote:FireServer("PrototypeOmnitrixLightCore", player.Character.HumanoidRootPart)
 	vfxRemote:FireServer("PrototypeOmnitrixPrimeSound", player.Character.HumanoidRootPart)
 	animationModule:Play("PrototypeOmnitrixPrime", 0.3)
@@ -67,7 +66,7 @@ end
 
 local function normalTransform(player)
 	local alien = alienPlaylistManager:GetAlienAtIndex(player, player.Character:GetAttribute("CurrentSelection"))
-
+	local gui = player.PlayerGui:WaitForChild("AlienDisplay")
 	animationModule:Stop("PrototypeOmnitrixPrime", 0)
 	animationModule:Stop("PrototypeOmnitrixPrimeIdle", 0.1)
 
