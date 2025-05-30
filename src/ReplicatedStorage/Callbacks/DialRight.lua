@@ -36,7 +36,6 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 			inputBinder:BindAction("DialLeft", { Enum.KeyCode.Q })
 			inputBinder:BindAction("DialRight", { Enum.KeyCode.E })
 		end
-		transformModule:applyMoves(player, alienPlaylistManager:GetAlienAtIndex(player, targetSelection))
 		print("Transforming to: " .. alienPlaylistManager:GetAlienAtIndex(player, targetSelection))
 		return Enum.ContextActionResult.Sink
 	end

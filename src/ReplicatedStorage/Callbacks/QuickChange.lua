@@ -43,7 +43,6 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	)
 	game.Players.LocalPlayer.Character:SetAttribute("CurrentSelection", randomSelect)
 	inputBinder:UnbindAllActions()
-	transformModule:applyMoves(player, alienPlaylistManager:GetAlienAtIndex(player, randomSelect))
 	inputBinder:BindAction("QuickChange", { Enum.KeyCode.U })
 	inputBinder:BindAction("Detransform", { Enum.KeyCode.T })
 	inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })

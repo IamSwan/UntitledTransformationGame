@@ -14,6 +14,8 @@ export type Template = {
 	JumpHeight : number,
 }
 
+-- Attack mult may be replaced by base damage in the future
+
 return table.freeze({
 	["Human"] = template,
 	["Pyronite"] = {

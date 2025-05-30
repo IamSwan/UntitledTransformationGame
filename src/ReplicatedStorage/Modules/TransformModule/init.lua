@@ -7,7 +7,6 @@ local aliensMoves = require(game.ReplicatedStorage.Configs.AliensMoves)
 local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModule)
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
 local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
-local alienMoves = require(game.ReplicatedStorage.Configs.AliensMoves)
 local keybinds = require(game.ReplicatedStorage.Configs.Keybinds)
 
 --|| Module ||--
@@ -25,15 +24,7 @@ local function applyAlienStats(player: Player, alien: string)
 	hum.MaxHealth = aStats.MaxHealth
 	hum.Health = math.clamp(aStats.MaxHealth * ratio, 0, aStats.MaxHealth)
 
-	local walkSpeed
-	if player.Character:GetAttribute("Sprinting") then
-		hum.WalkSpeed = aStats.RunSpeed
-		walkSpeed = aStats.RunSpeed
-	else
-		hum.WalkSpeed = aStats.WalkSpeed
-		walkSpeed = aStats.WalkSpeed
-	end
-	hum.JumpHeight = aStats.JumpHeight
+	game.ReplicatedStorage.Remotes.StatsRemote:FireClient(player, alien)
 
 	local alienAnimations = aliensAnims[alien]
 	if alienAnimations then
@@ -58,10 +49,6 @@ local function applyAlienStats(player: Player, alien: string)
 		animationModule:setNewId("FlyForward", "", player)
 	end
 
-	game.ReplicatedStorage.Remotes.Debug:FireClient(player,
-		"Applying stats for " .. alien .. ": MaxHealth: " .. aStats.MaxHealth .. ", WalkSpeed: " .. walkSpeed
-	)
-
 	if player.Character:GetAttribute("Flying") then
 		if not aStats.FlySpeed then
 			game.ReplicatedStorage.Remotes.ActionRemote:FireClient(player, "Fly", Enum.UserInputState.Begin)
@@ -74,7 +61,7 @@ end
 
 --|| Public functions ||--
 function transformModule:applyMoves(player, alien)
-	local moves = alienMoves[alien]
+	local moves = aliensMoves[alien]
 	if not moves then return end
 	for index, value in pairs(moves) do
 		if keybinds[index] then
