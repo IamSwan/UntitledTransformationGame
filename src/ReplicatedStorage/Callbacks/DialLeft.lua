@@ -17,8 +17,9 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 		return
 	end
 
-	if player.Character:GetAttribute("Transformed") and player:GetAttribute("Master") then
-		cooldownModule:Start(game.Players.LocalPlayer, "Busy", cooldownModule.SharedCooldowns.Prime)
+	if player.Character:GetAttribute("Transformed") and player:GetAttribute("Master") and cooldownModule:IsFinished(player, "Transform") then
+		cooldownModule:Start(game.Players.LocalPlayer, "Busy", 99)
+		cooldownModule:Start(game.Players.LocalPlayer, "Transform", 99)
 
 		local currentSelection = player.Character:GetAttribute("CurrentSelection")
 		local targetSelection = currentSelection - 1
@@ -44,7 +45,7 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	if not player.Character:GetAttribute("Priming") then
 		return
 	end
-	cooldownModule:Start(game.Players.LocalPlayer, "Busy", cooldownModule.SharedCooldowns.Prime)
+	cooldownModule:Start(game.Players.LocalPlayer, "Busy", 99)
 
 	game.ReplicatedStorage.Remotes.ActionRemote:FireServer(action)
 

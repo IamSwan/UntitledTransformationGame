@@ -17,7 +17,7 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 		return
 	end
 	cooldownModule:Start(player, "Busy", 99)
-	cooldownModule:Start(player, "Prime", cooldownModule.Cooldowns.Prime)
+	cooldownModule:Start(player, "Prime", 99)
 	local gui = player.PlayerGui:WaitForChild("AlienDisplay")
 
 

@@ -11,16 +11,14 @@ return function(player: Player, alien: string)
 	end
 	cooldownModule:Start(player, "Busy", cooldownModule.SharedCooldowns.QuickChange)
 	cooldownModule:Start(player, "Transform", cooldownModule.Cooldowns.Transform)
-	if not player.Character:GetAttribute("Transformed") then
-		return
+	if player.Character:GetAttribute("Transformed") then
+		player.Character:SetAttribute("Alien", alien)
+		transformModule:transform(player, alien)
 	end
-
-	player.Character:SetAttribute("Alien", alien)
-	transformModule:transform(player, alien)
-	task.delay(cooldownModule.SharedCooldowns.Transform, function()
+	task.delay(cooldownModule.SharedCooldowns.QuickChange, function()
 		cooldownModule:Stop(player, "Busy")
 	end)
-	task.delay(cooldownModule.Cooldowns.QuickChange, function()
+	task.delay(cooldownModule.Cooldowns.Transform, function()
 		cooldownModule:Stop(player, "Transform")
 	end)
 end

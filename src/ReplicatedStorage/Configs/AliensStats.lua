@@ -62,4 +62,12 @@ return table.freeze({
 		["RunSpeed"] = 12 * 2.5,
 		["JumpHeight"] = 7.2,
 	},
+	["Conductoid"] = {
+		["MaxHealth"] = 120,
+		["AttackMult"] = 1.2,
+		["WalkSpeed"] = 12,
+		["RunSpeed"] = 12 * 2.5,
+		["JumpHeight"] = 7.2,
+	},
+
 })

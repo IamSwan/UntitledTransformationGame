@@ -3,7 +3,6 @@
 local cooldownModule = require(game.ReplicatedStorage.Modules.Cooldown)
 local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
 local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
-local transformModule = require(game.ReplicatedStorage.Modules.TransformModule)
 
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
 
@@ -17,8 +16,8 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	then
 		return
 	end
-	cooldownModule:Start(game.Players.LocalPlayer, "Busy", cooldownModule.SharedCooldowns["QuickChange"])
-	cooldownModule:Start(game.Players.LocalPlayer, "QuickChange", cooldownModule.Cooldowns["Transform"])
+	cooldownModule:Start(game.Players.LocalPlayer, "Busy", 99)
+	cooldownModule:Start(game.Players.LocalPlayer, "QuickChange", 99)
 
 	if not game.Players.LocalPlayer.Character:GetAttribute("Transformed") then
 		return

@@ -9,7 +9,7 @@ return function(player: Player)
 		return
 	end
 	cooldownModule:Start(player, "Busy", cooldownModule.SharedCooldowns.Prime)
-	cooldownModule:Stop(player, "Prime", cooldownModule.Cooldowns.Prime)
+	cooldownModule:Start(player, "Prime", cooldownModule.Cooldowns.Prime)
 
 	local proto = player.Character:FindFirstChild("PrototypeOmnitrix")
 	local core = proto["Moving core"]
@@ -28,18 +28,18 @@ return function(player: Player)
 				primedLoop:Play()
 			end
 		end
-		task.delay(cooldownModule.SharedCooldowns.Prime, function()
-			cooldownModule:Stop(player, "Busy")
-		end)
-		return
+	else
+		local primedLoop: Sound = core.Core["PrimedLoop"]
+		if primedLoop then
+			primedLoop:Stop()
+		end
+		vfxRemote:FireAllClients("PrototypeOmnitrixDisableCore", player.Character.HumanoidRootPart)
+		player.Character:SetAttribute("Priming", nil)
 	end
-	local primedLoop: Sound = core.Core["PrimedLoop"]
-	if primedLoop then
-		primedLoop:Stop()
-	end
-	vfxRemote:FireAllClients("PrototypeOmnitrixDisableCore", player.Character.HumanoidRootPart)
-	player.Character:SetAttribute("Priming", nil)
 	task.delay(cooldownModule.SharedCooldowns.Prime, function()
 		cooldownModule:Stop(player, "Busy")
+	end)
+	task.delay(cooldownModule.Cooldowns.Prime, function()
+		cooldownModule:Stop(player, "Prime")
 	end)
 end
