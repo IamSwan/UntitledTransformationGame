@@ -2,7 +2,7 @@
 export type Item = {
     Name: string,
     Description: string,
-    Max_Stack: number,
+    MaxStack: number,
     GetName: () -> string,
     GetDescription: () -> string,
     GetMaxStack: () -> number,
@@ -17,7 +17,7 @@ function items.new(name: string, description: string, maxStack: number): Item
     local self = setmetatable({}, items)
     self.Name = name
     self.Description = description
-    self.Max_Stack = maxStack
+    self.MaxStack = maxStack
     return table.freeze(self)
 end
 
@@ -31,7 +31,7 @@ function items:GetDescription(): string
 end
 
 function items:GetMaxStack(): number
-    return self.Max_Stack
+    return self.MaxStack
 end
 
 return items

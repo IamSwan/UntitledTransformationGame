@@ -25,7 +25,7 @@ end
 
 --|| Public Methods ||--
 function inventory:AddItem(item: Items.Item, amount: number): boolean
-    if not item or not item.Name or not item.Description or not item.Max_Stack then
+    if not item or not item.Name or not item.Description or not item.MaxStack then
         return false
     end
     if not table.find(ValidItems, item.Name) then
@@ -33,7 +33,7 @@ function inventory:AddItem(item: Items.Item, amount: number): boolean
     end
     local currentAmount = self.Items[item.Name] and self.Items[item.Name].Amount or 0
 
-    if currentAmount + amount > item.Max_Stack then
+    if currentAmount + amount > item.MaxStack then
         return false
     end
 
