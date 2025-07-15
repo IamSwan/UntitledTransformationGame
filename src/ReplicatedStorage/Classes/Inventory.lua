@@ -13,6 +13,11 @@ inventory.__index = inventory
 --|| Private Attributes ||--
 local playersData = {}
 
+-- Cleanup player data when they leave the game
+Players.PlayerRemoving:Connect(function(player)
+    playersData[player.UserId] = nil
+end)
+
 --|| Constructor ||--
 function inventory.new(player: Player)
     local self = setmetatable({}, inventory)
