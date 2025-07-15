@@ -46,7 +46,7 @@ function inventory:AddItem(item: Items.Item, amount: number): boolean
 end
 
 function inventory:RemoveItem(item: string, amount: number): boolean
-    local currentAmount = playersData[self.Player.UserId][item] and playersData[self.Player.UserId][item].Amount or 0
+    local currentAmount = self.Items[item] and self.Items[item].Amount or 0
 
     if currentAmount - amount < 0 then
         self.Items[item] = nil
