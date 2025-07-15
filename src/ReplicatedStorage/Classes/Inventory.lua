@@ -70,9 +70,7 @@ function inventory:GetItemCount(itemName: string): number
 end
 
 function inventory:ClearInventory()
-    for itemName, _ in pairs(self.Items) do
-        self.Items[itemName] = nil
-    end
+    self.Items = {}
 end
 
 function inventory.GetPlayerInventory(player: Player)
