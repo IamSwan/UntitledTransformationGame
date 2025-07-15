@@ -75,7 +75,7 @@ function inventory:ClearInventory()
     end
 end
 
-function inventory:GetPlayerInventory(player: Player)
+function inventory.GetPlayerInventory(player: Player)
     return playersData[player.UserId]
 end
 
