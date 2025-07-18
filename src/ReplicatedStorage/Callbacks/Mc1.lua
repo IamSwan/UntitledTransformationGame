@@ -7,7 +7,7 @@ local cooldownModule = require(game.ReplicatedStorage.Modules.Cooldown)
 return function(action: string, state: Enum.UserInputState, object: InputObject)
     if state ~= Enum.UserInputState.Begin then return end
     if not player:GetAttribute("Master") then return end
-    if not cooldownModule:IsFinished(game.Players.LocalPlayer, "Busy") or not cooldownModule:IsFinished(player, "Transform") then
+    if not cooldownModule:IsFinished(player, "Busy") or not cooldownModule:IsFinished(player, "Transform") then
 		print("busy.")
 		return
 	end

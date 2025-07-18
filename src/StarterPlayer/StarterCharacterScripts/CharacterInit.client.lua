@@ -28,7 +28,6 @@ inputBinder:BindAction("Prime", { Enum.KeyCode.R })
 inputBinder:BindAction("Transform", { Enum.KeyCode.T })
 inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })
 inputBinder:BindAction("Shiftlock", { Enum.KeyCode.LeftControl })
-inputBinder:BindAction("Mc1", { Enum.KeyCode.Z })
 
 animationModule:refresh()
 
