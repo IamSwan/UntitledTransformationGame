@@ -55,6 +55,11 @@ local actionIgnoreList = {
 	"moveLeftAction",
 	"RbxCameraGamepadZoom",
 	"moveRightAction",
+	"Mc1",
+	"Mc2",
+	"Mc3",
+	"Mc4",
+	"Mc5"
 }
 
 function inputBinderModule:UnbindAllActions()
