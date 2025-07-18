@@ -1,6 +1,5 @@
 --|| Roblox Services ||--
 local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
 
 --|| Dependencies ||--
 local Items = require(script.Parent.Items)

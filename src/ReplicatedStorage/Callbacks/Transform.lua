@@ -4,7 +4,6 @@ local cooldownModule = require(game.ReplicatedStorage.Modules.Cooldown)
 local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
 local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
 local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModule)
-local transformModule = require(game.ReplicatedStorage.Modules.TransformModule)
 
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
 
@@ -107,13 +106,14 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	cooldownModule:Start(game.Players.LocalPlayer, "Busy", 99)
 	cooldownModule:Start(game.Players.LocalPlayer, "Transform", 99)
 
-	local player = game.Players.LocalPlayer
-
 	local canTransform = not batteryModule:isTimedOut(player)
 
 	local currentAlien = player.Character:GetAttribute("CurrentSelection")
 
 	if player.Character:GetAttribute("Transformed") and alienPlaylistManager:GetAlienAtIndex(player, currentAlien) == player.Character:GetAttribute("Alien") then
+		-- Stop cooldowns since we're not actually transforming
+		cooldownModule:Stop(player, "Busy")
+		cooldownModule:Stop(player, "Transform")
 		return Enum.ContextActionResult.Sink
 	end
 
