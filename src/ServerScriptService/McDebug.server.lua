@@ -23,8 +23,8 @@ game.ReplicatedStorage.Remotes.MCREMOTE.OnServerEvent:Connect(function(plr)
 		inputBinder:ForceBindFromServer(plr, "Mc1", { Enum.KeyCode.Z })
 		inputBinder:ForceBindFromServer(plr, "Mc2", { Enum.KeyCode.X })
 		inputBinder:ForceBindFromServer(plr, "Mc3", { Enum.KeyCode.C })
-		inputBinder:ForceBindFromServer(plr, "Mc4", { Enum.KeyCode.V })
-		inputBinder:ForceBindFromServer(plr, "Mc5", { Enum.KeyCode.B })
+		inputBinder:ForceBindFromServer(plr, "Mc4", { Enum.KeyCode.B })
+		inputBinder:ForceBindFromServer(plr, "Mc5", { Enum.KeyCode.N })
 		if mcKeybindsUi then
 			mcKeybindsUi.Enabled = true
 		end

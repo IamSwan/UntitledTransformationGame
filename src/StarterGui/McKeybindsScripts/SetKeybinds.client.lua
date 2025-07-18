@@ -10,8 +10,8 @@ local keys = {
     ["Mc1"] = Enum.KeyCode.Z,
     ["Mc2"] = Enum.KeyCode.X,
     ["Mc3"] = Enum.KeyCode.C,
-    ["Mc4"] = Enum.KeyCode.V,
-    ["Mc5"] = Enum.KeyCode.B,
+    ["Mc4"] = Enum.KeyCode.B,
+    ["Mc5"] = Enum.KeyCode.N,
 }
 
 for _, keybind in ipairs(holderRight:GetChildren()) do
