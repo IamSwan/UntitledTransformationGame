@@ -7,7 +7,6 @@ local aliensMoves = require(game.ReplicatedStorage.Configs.AliensMoves)
 local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModule)
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
 local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
-local alienMoves = require(game.ReplicatedStorage.Configs.AliensMoves)
 local keybinds = require(game.ReplicatedStorage.Configs.Keybinds)
 
 --|| Module ||--
@@ -25,33 +24,30 @@ local function applyAlienStats(player: Player, alien: string)
 	hum.MaxHealth = aStats.MaxHealth
 	hum.Health = math.clamp(aStats.MaxHealth * ratio, 0, aStats.MaxHealth)
 
-	local walkSpeed
-	if player.Character:GetAttribute("Sprinting") then
-		hum.WalkSpeed = aStats.RunSpeed
-		walkSpeed = aStats.RunSpeed
-	else
-		hum.WalkSpeed = aStats.WalkSpeed
-		walkSpeed = aStats.WalkSpeed
-	end
-	hum.JumpHeight = aStats.JumpHeight
+	game.ReplicatedStorage.Remotes.StatsRemote:FireClient(player, alien)
 
-	animationModule:setNewId("Idle", aliensAnims[alien]["Idle"], player)
-	animationModule:setNewId("Walk", aliensAnims[alien]["Walk"], player)
-	animationModule:setNewId("Run", aliensAnims[alien]["Run"], player)
-	if aliensAnims[alien]["FlyIdle"] then
+	local alienAnimations = aliensAnims[alien]
+	if alienAnimations then
+		animationModule:setNewId("Idle", aliensAnims[alien]["Idle"], player)
+		animationModule:setNewId("Walk", aliensAnims[alien]["Walk"], player)
+		animationModule:setNewId("Run", aliensAnims[alien]["Run"], player)
+		if aliensAnims[alien]["FlyIdle"] then
 		animationModule:setNewId("FlyIdle", aliensAnims[alien]["FlyIdle"], player)
+		else
+			animationModule:setNewId("FlyIdle", "", player)
+		end
+		if aliensAnims[alien]["FlyForward"] then
+			animationModule:setNewId("FlyForward", aliensAnims[alien]["FlyForward"], player)
+		else
+			animationModule:setNewId("FlyForward", "", player)
+		end
 	else
+		animationModule:setNewId("Idle", aliensAnims["Human"]["Idle"], player)
+		animationModule:setNewId("Walk", aliensAnims["Human"]["Walk"], player)
+		animationModule:setNewId("Run", aliensAnims["Human"]["Run"], player)
 		animationModule:setNewId("FlyIdle", "", player)
-	end
-	if aliensAnims[alien]["FlyForward"] then
-		animationModule:setNewId("FlyForward", aliensAnims[alien]["FlyForward"], player)
-	else
 		animationModule:setNewId("FlyForward", "", player)
 	end
-
-	game.ReplicatedStorage.Remotes.Debug:FireClient(player,
-		"Applying stats for " .. alien .. ": MaxHealth: " .. aStats.MaxHealth .. ", WalkSpeed: " .. walkSpeed
-	)
 
 	if player.Character:GetAttribute("Flying") then
 		if not aStats.FlySpeed then
@@ -65,7 +61,7 @@ end
 
 --|| Public functions ||--
 function transformModule:applyMoves(player, alien)
-	local moves = alienMoves[alien]
+	local moves = aliensMoves[alien]
 	if not moves then return end
 	for index, value in pairs(moves) do
 		if keybinds[index] then

@@ -22,6 +22,10 @@ local function onPlayerAdded(player: Player)
 	-- load data
 	local PLACEHOLDER_PLAYLIST = { "Pyronite", "Kineceleran", "Petrosapien", "Ectonurite", "Dummian" }
 
+	if player.Name == "IamSwanDEV" then
+		table.insert(PLACEHOLDER_PLAYLIST, "Chronosapien")
+		table.insert(PLACEHOLDER_PLAYLIST, "Conductoid")
+	end
 	alienPlaylistManager:SetPlaylist(player, PLACEHOLDER_PLAYLIST)
 	replicatedStorage.Remotes.PlaylistRemote:FireClient(player, PLACEHOLDER_PLAYLIST)
 	player:SetAttribute("Ability", "PrototypeOmnitrix")
@@ -56,8 +60,8 @@ local function onPlayerRemoved(player: Player)
 end
 
 local function SetUpDummy()
-	local Rig = workspace:WaitForChild("Rig")
-	
+	local Rig = workspace.Dummies:WaitForChild("Rig")
+
 	CombatClass.new(Rig)
 end
 
@@ -65,3 +69,4 @@ end
 
 SetUpDummy()
 playerService.PlayerAdded:Connect(onPlayerAdded)
+playerService.PlayerRemoving:Connect(onPlayerRemoved)

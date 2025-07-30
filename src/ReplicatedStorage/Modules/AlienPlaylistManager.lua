@@ -11,6 +11,7 @@ function alienPlaylistManager:AddToPlaylist(player: Player, alien: string)
 		return
 	end
 	table.insert(playlists[player.UserId], alien)
+	game.ReplicatedStorage.Remotes.PlaylistRemote:FireClient(player, playlists[player.UserId])
 end
 
 function alienPlaylistManager:SetPlaylist(player: Player, playlist: {})

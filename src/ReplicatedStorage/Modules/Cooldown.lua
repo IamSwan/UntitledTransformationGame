@@ -2,14 +2,14 @@
 local Cooldown = {}
 
 Cooldown.SharedCooldowns = {
-	["Prime"] = 0.3,
-	["Transform"] = 1,
-	["Dial"] = 0.1,
+	["Prime"] = .3,
+	["Transform"] = .5,
+	["Dial"] = .1,
 	["QuickChange"] = 1,
 }
 
 Cooldown.Cooldowns = {
-	["Transform"] = 2,
+	["Transform"] = .5,
 	["Prime"] = 1,
 }
 

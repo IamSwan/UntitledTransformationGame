@@ -4,7 +4,6 @@ local cooldownModule = require(game.ReplicatedStorage.Modules.Cooldown)
 local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
 local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
 local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModule)
-local transformModule = require(game.ReplicatedStorage.Modules.TransformModule)
 
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
 
@@ -14,19 +13,23 @@ local vfxRemote = replicatedStorage.Remotes.VFXRemote
 
 local player = game.Players.LocalPlayer
 
-local gui = player.PlayerGui:WaitForChild("AlienDisplay")
-
-
 local function handleCantTransform(player)
 	if not player.Character:GetAttribute("Priming") then
 		animationModule:Play("PrototypeOmnitrixPrime", 0.3)
 		animationModule:getTrack("PrototypeOmnitrixPrime"):GetMarkerReachedSignal("Trigger"):Wait()
 	end
 	animationModule:Play("PrototypeOmnitrixSlam")
+	task.delay(cooldownModule.SharedCooldowns.Transform, function()
+		cooldownModule:Stop(player, "Busy")
+	end)
+	task.delay(cooldownModule.Cooldowns.Transform, function()
+		cooldownModule:Stop(player, "Transform")
+	end)
 end
 
 local function switchAlien(player)
 	local alien = alienPlaylistManager:GetAlienAtIndex(player, player.Character:GetAttribute("CurrentSelection"))
+	local gui = player.PlayerGui:WaitForChild("AlienDisplay")
 
 	replicatedStorage.Remotes.ActionRemote:FireServer("Transform", alien)
 	inputBinder:UnbindAllActions()
@@ -36,12 +39,12 @@ local function switchAlien(player)
 	inputBinder:BindAction("DialRight", { Enum.KeyCode.E })
 	inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })
 	inputBinder:BindAction("Shiftlock", { Enum.KeyCode.LeftControl })
-	transformModule:applyMoves(player, alien)
 	gui.Enabled = false
 	print("Transforming to: " .. alien)
 end
 
 local function randomTransform(player)
+
 	inputBinder:UnbindAllActions()
 	inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })
 	inputBinder:BindAction("Shiftlock", { Enum.KeyCode.LeftControl })
@@ -49,6 +52,9 @@ local function randomTransform(player)
 	inputBinder:BindAction("Detransform", { Enum.KeyCode.T })
 	local randomIndex = math.random(1, #alienPlaylistManager:GetPlaylist(game.Players.LocalPlayer))
 	local randomAlien = alienPlaylistManager:GetAlienAtIndex(game.Players.LocalPlayer, randomIndex)
+	local gui = player.PlayerGui:WaitForChild("AlienDisplay")
+	gui.AlienSelection.Text = randomAlien
+	gui.Enabled = true
 	vfxRemote:FireServer("PrototypeOmnitrixLightCore", player.Character.HumanoidRootPart)
 	vfxRemote:FireServer("PrototypeOmnitrixPrimeSound", player.Character.HumanoidRootPart)
 	animationModule:Play("PrototypeOmnitrixPrime", 0.3)
@@ -58,7 +64,6 @@ local function randomTransform(player)
 	animationModule:getTrack("PrototypeOmnitrixSlam"):GetMarkerReachedSignal("Trigger"):Wait()
 	animationModule:Stop("PrototypeOmnitrixSlam", 0)
 	replicatedStorage.Remotes.ActionRemote:FireServer("Transform", randomAlien)
-	transformModule:applyMoves(player, randomAlien)
 	vfxRemote:FireServer("PrototypeOmnitrixDisableCore", player.Character.HumanoidRootPart)
 	game.Players.LocalPlayer.Character:SetAttribute("CurrentSelection", randomIndex)
 	gui.Enabled = false
@@ -67,7 +72,7 @@ end
 
 local function normalTransform(player)
 	local alien = alienPlaylistManager:GetAlienAtIndex(player, player.Character:GetAttribute("CurrentSelection"))
-
+	local gui = player.PlayerGui:WaitForChild("AlienDisplay")
 	animationModule:Stop("PrototypeOmnitrixPrime", 0)
 	animationModule:Stop("PrototypeOmnitrixPrimeIdle", 0.1)
 
@@ -76,7 +81,6 @@ local function normalTransform(player)
 	inputBinder:BindAction("Detransform", { Enum.KeyCode.T })
 	inputBinder:BindAction("Sprint", { Enum.KeyCode.LeftShift })
 	inputBinder:BindAction("Shiftlock", { Enum.KeyCode.LeftControl })
-	transformModule:applyMoves(player, alien)
 	if player:GetAttribute("Master") then
 		inputBinder:BindAction("DialLeft", { Enum.KeyCode.Q })
 		inputBinder:BindAction("DialRight", { Enum.KeyCode.E })
@@ -95,19 +99,21 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	if state ~= Enum.UserInputState.Begin then
 		return
 	end
-	if not cooldownModule:IsFinished(game.Players.LocalPlayer, "Busy") then
+	if not cooldownModule:IsFinished(game.Players.LocalPlayer, "Busy") or not cooldownModule:IsFinished(player, "Transform") then
 		print("busy.")
 		return
 	end
-	cooldownModule:Start(game.Players.LocalPlayer, "Busy", cooldownModule.SharedCooldowns["Transform"])
-
-	local player = game.Players.LocalPlayer
+	cooldownModule:Start(game.Players.LocalPlayer, "Busy", 99)
+	cooldownModule:Start(game.Players.LocalPlayer, "Transform", 99)
 
 	local canTransform = not batteryModule:isTimedOut(player)
 
 	local currentAlien = player.Character:GetAttribute("CurrentSelection")
 
 	if player.Character:GetAttribute("Transformed") and alienPlaylistManager:GetAlienAtIndex(player, currentAlien) == player.Character:GetAttribute("Alien") then
+		-- Stop cooldowns since we're not actually transforming
+		cooldownModule:Stop(player, "Busy")
+		cooldownModule:Stop(player, "Transform")
 		return Enum.ContextActionResult.Sink
 	end
 

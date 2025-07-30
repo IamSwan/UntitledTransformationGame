@@ -2,8 +2,6 @@
 
 local cooldownModule = require(game.ReplicatedStorage.Modules.Cooldown)
 local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
-local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
-local aliensAnims = require(game.ReplicatedStorage.Configs.AliensAnims)
 
 local animationModule = require(game.ReplicatedStorage.Modules.AnimationModule)
 
@@ -13,11 +11,12 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	if state ~= Enum.UserInputState.Begin then
 		return
 	end
-	if not cooldownModule:IsFinished(game.Players.LocalPlayer, "Busy") then
+	if not cooldownModule:IsFinished(game.Players.LocalPlayer, "Busy") or not cooldownModule:IsFinished(game.Players.LocalPlayer, "Transform") then
 		print("busy.")
 		return
 	end
-	cooldownModule:Start(game.Players.LocalPlayer, "Busy", cooldownModule.SharedCooldowns["Transform"])
+	cooldownModule:Start(game.Players.LocalPlayer, "Busy", 99)
+	cooldownModule:Start(game.Players.LocalPlayer, "Transform", 99)
 
 	local player = game.Players.LocalPlayer
 

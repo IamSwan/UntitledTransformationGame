@@ -6,12 +6,19 @@ local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModu
 local transformConfig = require(game.ReplicatedStorage.Configs.TransformConfig)
 local alienPlaylistManager = require(game.ReplicatedStorage.Modules.AlienPlaylistManager)
 
+function stopCooldown(player: Player, name: string, delay: number)
+	task.delay(delay, function()
+		cooldownModule:Stop(player, name)
+	end)
+end
+
 return function(player: Player, alien: string)
-	if not cooldownModule:IsFinished(player, "Busy") then
+	if not cooldownModule:IsFinished(player, "Busy") or not cooldownModule:IsFinished(player, "Transform") then
 		print("busy.")
 		return
 	end
 	cooldownModule:Start(player, "Busy", cooldownModule.SharedCooldowns.Transform)
+	cooldownModule:Start(player, "Transform", cooldownModule.Cooldowns.Transform)
 
 	local canTransform = (not batteryModule:isTimedOut(player) or player:GetAttribute("Master") ~= nil)
 	-- for the canTransform, add more conditions for possible watches evolutions
@@ -20,16 +27,14 @@ return function(player: Player, alien: string)
 		if player:GetAttribute("Master") then
 			transformModule:transform(player, alien)
 		end
-		task.delay(cooldownModule.SharedCooldowns.Transform, function()
-			cooldownModule:Stop(player, "Busy")
-		end)
+		stopCooldown(player, "Busy", cooldownModule.SharedCooldowns.Transform)
+		stopCooldown(player, "Transform", cooldownModule.Cooldowns.Transform)
 		return
 	end
 
 	if not canTransform then
-		task.delay(cooldownModule.SharedCooldowns.Transform, function()
-			cooldownModule:Stop(player, "Busy")
-		end)
+		stopCooldown(player, "Busy", cooldownModule.SharedCooldowns.Transform)
+		stopCooldown(player, "Transform", cooldownModule.Cooldowns.Transform)
 		return
 	end
 
@@ -44,13 +49,12 @@ return function(player: Player, alien: string)
 		local randomAlien = alienPlaylistManager:GetAlienAtIndex(player, randomIndex)
 		player.Character:SetAttribute("CurrentSelection", randomIndex)
 		transformModule:transform(player, randomAlien)
-		game.ReplicatedStorage.Remotes.CustomChatRemote:FireAllClients(player, `Awww man! I wanted a {alien}, not a {randomAlien}!`)
-		print("mistransform")
+		if randomAlien ~= alien then
+			game.ReplicatedStorage.Remotes.CustomChatRemote:FireAllClients(player, `Awww man! I wanted a {alien}, not a {randomAlien}!`)
+		end
 	else
 		transformModule:transform(player, alien)
 	end
-
-	task.delay(cooldownModule.SharedCooldowns.Transform, function()
-		cooldownModule:Stop(player, "Busy")
-	end)
+	stopCooldown(player, "Busy", cooldownModule.SharedCooldowns.Transform)
+	stopCooldown(player, "Transform", cooldownModule.Cooldowns.Transform)
 end

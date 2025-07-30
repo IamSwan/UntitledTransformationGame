@@ -9,11 +9,12 @@ local batteryModule = require(game.ReplicatedStorage.Modules.OmnitrixBatteryModu
 local vfxRemote = game.ReplicatedStorage.Remotes.VFXRemote
 
 return function(player: Player)
-	if not cooldownModule:IsFinished(player, "Busy") then
+	if not cooldownModule:IsFinished(player, "Busy") or not cooldownModule:IsFinished(player,  "Transform") then
 		print("busy.")
 		return
 	end
 	cooldownModule:Start(player, "Busy", cooldownModule.SharedCooldowns.Transform)
+	cooldownModule:Start(player, "Transform", cooldownModule.Cooldowns.Transform)
 
 	local canDetransform = true -- to be replaced to lock the feature
 
@@ -23,5 +24,8 @@ return function(player: Player)
 	end
 	task.delay(cooldownModule.SharedCooldowns.Transform, function()
 		cooldownModule:Stop(player, "Busy")
+	end)
+	task.delay(cooldownModule.Cooldowns.Transform, function()
+		cooldownModule:Stop(player, "Transform")
 	end)
 end

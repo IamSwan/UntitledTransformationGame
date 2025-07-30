@@ -12,7 +12,6 @@ return function(player: Player)
 	if dialSound then
 		dialSound:Play()
 	end
-
 	task.delay(cooldownModule.SharedCooldowns.Dial, function()
 		cooldownModule:Stop(player, "Busy")
 	end)

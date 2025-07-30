@@ -8,8 +8,6 @@ local inputBinder = require(game.ReplicatedStorage.Modules.InputBinder)
 
 local player = game.Players.LocalPlayer
 
-local gui = player.PlayerGui:WaitForChild("AlienDisplay")
-
 return function(action: string, state: Enum.UserInputState, inputObject: InputObject)
 	if state ~= Enum.UserInputState.Begin then
 		return
@@ -19,8 +17,9 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 		return
 	end
 
-	if player.Character:GetAttribute("Transformed") and player:GetAttribute("Master") then
-		cooldownModule:Start(game.Players.LocalPlayer, "Busy", cooldownModule.SharedCooldowns.Prime)
+	if player.Character:GetAttribute("Transformed") and player:GetAttribute("Master") and cooldownModule:IsFinished(game.Players.LocalPlayer, "Transform") then
+		cooldownModule:Start(game.Players.LocalPlayer, "Busy", 99)
+		cooldownModule:Start(game.Players.LocalPlayer, "Transform", 99)
 
 		local currentSelection = player.Character:GetAttribute("CurrentSelection")
 		local targetSelection = currentSelection + 1
@@ -38,7 +37,6 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 			inputBinder:BindAction("DialLeft", { Enum.KeyCode.Q })
 			inputBinder:BindAction("DialRight", { Enum.KeyCode.E })
 		end
-		transformModule:applyMoves(player, alienPlaylistManager:GetAlienAtIndex(player, targetSelection))
 		print("Transforming to: " .. alienPlaylistManager:GetAlienAtIndex(player, targetSelection))
 		return Enum.ContextActionResult.Sink
 	end
@@ -46,13 +44,14 @@ return function(action: string, state: Enum.UserInputState, inputObject: InputOb
 	if not player.Character:GetAttribute("Priming") then
 		return
 	end
-	cooldownModule:Start(game.Players.LocalPlayer, "Busy", cooldownModule.SharedCooldowns.Prime)
+	cooldownModule:Start(game.Players.LocalPlayer, "Busy", 99)
 	game.ReplicatedStorage.Remotes.ActionRemote:FireServer(action)
 
 	local currentSelection = player.Character:GetAttribute("CurrentSelection") or 1
 	if currentSelection + 1 > #alienPlaylistManager:GetPlaylist(player) then
 		currentSelection = 0
 	end
+	local gui = player.PlayerGui:WaitForChild("AlienDisplay")
 	animationModule:Play("PrototypeOmnitrixDialRight")
 	player.Character:SetAttribute("CurrentSelection", currentSelection + 1)
 	gui.AlienSelection.Text = alienPlaylistManager:GetAlienAtIndex(player, currentSelection + 1)

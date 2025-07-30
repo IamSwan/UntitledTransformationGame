@@ -14,6 +14,8 @@ export type Template = {
 	JumpHeight : number,
 }
 
+-- Attack mult may be replaced by base damage in the future
+
 return table.freeze({
 	["Human"] = template,
 	["Pyronite"] = {
@@ -53,4 +55,19 @@ return table.freeze({
 		["JumpHeight"] = 30,
 		["FlySpeed"] = 500,
 	},
+	["Chronosapien"] = {
+		["MaxHealth"] = 150,
+		["AttackMult"] = 1.5,
+		["WalkSpeed"] = 12,
+		["RunSpeed"] = 12 * 2.5,
+		["JumpHeight"] = 7.2,
+	},
+	["Conductoid"] = {
+		["MaxHealth"] = 120,
+		["AttackMult"] = 1.2,
+		["WalkSpeed"] = 12,
+		["RunSpeed"] = 12 * 2.5,
+		["JumpHeight"] = 7.2,
+	},
+
 })
