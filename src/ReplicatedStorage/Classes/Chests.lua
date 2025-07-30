@@ -52,7 +52,11 @@ function ChestsModule:CreateChest(name: string, Cframe: CFrame)
     if not name or not Cframe then
         error("Name and CFrame are required to create a chest.")
     end
-    local chest = game.ServerStorage.Chests:FindFirstChild(self._rarity):Clone()
+    local template = game.ServerStorage.Chests:FindFirstChild(self._rarity)
+    if not template then
+        error(string.format("No chest template found for rarity '%s'.", self._rarity))
+    end
+    local chest = template:Clone()
     chest.Name = name
     chest.PrimaryPart.CFrame = Cframe
     chest.PrimaryPart.Anchored = true

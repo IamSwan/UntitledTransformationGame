@@ -10,7 +10,7 @@ local SPAWN_INTERVAL = 10
 while true do
     local rarity = nil
 
-    local randomValue = math.random(0, 100)
+    local randomValue = math.random(1, 100)
 
     local rarityOrder = {"Legendary", "Epic", "Rare", "Uncommon", "Common"}
 
@@ -35,7 +35,7 @@ while true do
             local chestName = randomSpawn.Name
             local chestCFrame = randomSpawn.CFrame
             if chestFolder:FindFirstChild(chestName) then
-                warn("Chest cannot spawn atm")
+                warn("Chest spawn skipped: location already occupied")
                 continue
             end
             local chest = chestsModule.new(rarity)
